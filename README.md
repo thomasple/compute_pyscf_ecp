@@ -4,7 +4,8 @@ This program computes DFT energies and forces for molecular conformations using 
 * basis set: aug-cc-pVTZ
 * use effective core potentials (ccECP). It is designed to process datasets of molecular structures and output their corresponding energies and forces.
 * processes input data in FeNNol dataset format.
-This is the exact level of theory used to generate the training data for the FeNNix-Bio1 model.
+
+This is the level of theory used to generate the training data for the FeNNix-Bio1 model.
 
 # Units
 * Distances in Angstrom.
