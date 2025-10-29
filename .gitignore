@@ -8,3 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
+
+
+*.wb97m-d3bj_ecp.pkl

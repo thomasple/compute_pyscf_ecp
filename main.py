@@ -101,7 +101,9 @@ def compute_entry(conformation, method="wb97m-d3bj",use_gpu=False):
         eref = np.sum(neutral_atom_energies[species])
         eform = e - eref
 
-        output_data = dict(
+        output = dict(
+            species=species,
+            coordinates=coordinates,
             total_charge=total_charge,
             total_energy=e,
             total_energy_mask=True,
@@ -112,13 +114,14 @@ def compute_entry(conformation, method="wb97m-d3bj",use_gpu=False):
             error=None,
             computation_time=elapsed_time,
         )
-        output = {**conformation, **output_data}
         
 
     except Exception as ex:
         print_flush(f"Error computing entry: {ex}")
         elapsed_time = time.time() - start_time
         output_data = dict(
+            species=species,
+            coordinates=coordinates,
             total_charge=total_charge,
             total_energy=0.,
             total_energy_mask=False,
