@@ -27,7 +27,9 @@ def compute_entry(conformation, method="wb97m-d3bj",use_gpu=False):
     total_charge = round(conformation.get("total_charge", 0))
     coordinates = conformation["coordinates"]
     species = conformation["species"]
+    eform_mask = True
     if not np.all(np.isin(species, species_avail)):
+        eform_mask = False
         missing = set(species) - set(species_avail)
         print(f"Warning: Species {missing} not available in isolated atom energies. Formation energy will be wrong.")
     try:
@@ -108,7 +110,7 @@ def compute_entry(conformation, method="wb97m-d3bj",use_gpu=False):
             total_energy=e,
             total_energy_mask=True,
             formation_energy=eform,
-            formation_energy_mask=True,
+            formation_energy_mask=eform_mask,
             forces=forces,
             forces_mask=np.ones(coordinates.shape[0], dtype=bool),
             error=None,
