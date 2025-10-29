@@ -1,5 +1,8 @@
 import pickle
-
+import numpy as np
+import os
+import multiprocessing
+from pathlib import Path
 
 BOHR = 0.52917721067
 
@@ -40,3 +43,29 @@ def read_pickle_dataset(pkl_file):
 def write_pickle_dataset(pkl_file, dataset):
     with open(pkl_file, "wb") as f:
         pickle.dump(dataset, f)
+
+def split_dataset_shards(pkl_file, n_shards,verbose=False):
+    if verbose:
+        print(f"Reading dataset from {pkl_file}...")
+    dataset = read_pickle_dataset(pkl_file)
+    if verbose:
+        print(f"Dataset size: {len(dataset)} conformations")
+        print()
+        print(f"Splitting dataset into {n_shards} shards...")
+    shards_indices = np.array_split(np.arange(len(dataset)), n_shards)
+    
+    # remove extension to pkl_file
+    prefix = str(Path(pkl_file).with_suffix(''))
+
+    for i in range(n_shards):
+        shard_indices = shards_indices[i]
+        shard = [dataset[j] for j in shard_indices]
+        if verbose:
+            print(f"shard {i+1:02} size", len(shard))
+        with open(f"{prefix}.shard{i+1:02}.pkl", "wb") as f:
+            pickle.dump(shard, f)
+        if verbose:
+            print(f"shard {i+1:02} done")
+
+    if verbose:
+        print("All shards written.")

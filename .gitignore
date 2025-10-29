@@ -11,3 +11,4 @@ wheels/
 
 
 *.wb97m-d3bj_ecp.pkl
+*.shard*.pkl
