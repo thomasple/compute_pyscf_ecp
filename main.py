@@ -10,7 +10,7 @@ import glob
 import pickle
 import tqdm
 
-from utils import PERIODIC_TABLE, PERIODIC_TABLE_REV_IDX, BOHR
+from utils import PERIODIC_TABLE, PERIODIC_TABLE_REV_IDX, BOHR, read_pickle_dataset
 from energy_references import neutral_atom_energies, isolated_atom_energies
 
 RES_DIR = os.path.dirname(__file__) + "/resources"
@@ -164,11 +164,7 @@ def main():
     assert not os.path.exists(output_file), f"Output file {output_file} already exists"
 
     print(f"Loading conformations from {args.pkl_file}...")
-    with open(args.pkl_file, "rb") as f:
-        conformations = pickle.load(f)
-    if not isinstance(conformations, list):
-        assert isinstance(conformations, dict), "Input pickle file must contain a list or dict"
-        conformations = conformations["training"]+conformations["validation"]
+    conformations = read_pickle_dataset(args.pkl_file)
     print(f"Loaded {len(conformations)} conformations.")
     
     
@@ -179,10 +175,6 @@ def main():
             res = compute_entry(conf, use_gpu=(args.gpu >= 0))
             pickle.dump(res, f)
     print(f"Results saved to {output_file}.")
-    
-
-
-
 
 if __name__ == "__main__":
     main()
